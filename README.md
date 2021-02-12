@@ -20,4 +20,33 @@ These are the steps needed to go from fastq files to cleavage ratios:
      samtools index outFileNamePrefix.bam 
      samtools view -hb  outFileNamePrefix.bam chrM > outFileNamePrefix.MT.bam
 
-5 - Generate cleavage ratios running our perl script.
+5 - Generate cleavage ratios running get_linear_cleavage_ratio.pl. The script requires 2 arguments:
+    - The name of the bam file name obtained using the previous steps
+    - A prefix to be used by the script to generate the output
+
+    perl get_linear_cleavage_ratio.pl outFileNamePrefix.MT.bam my_out_cleavage >my_out_cleavage.log 2>my_out_cleavage.err
+
+6 - Filter peaks running get_himalaya_ratios.pl. The script uses a cleavage ratio threshold (we recommend 0.1) and keeps the highest ratio above the threshold. When there is a cluster of peaks (Himalaya) within a bp range (we recommend 5bp) the script selects the peak with the highest ratio (everest) to represent the cluster. It can be run using a command like: 
+
+    perl get_himalaya_ratios.checkCov.pl --ratiosFile=rat_filename --everestOutfile=eve_out_filename --himalayaOutfile=him_out_filename >him_out_filename.log 2>him_out_filename.err
+
+7 - Using the filtered peaks from the previous step, you can filter across your samples for the presence of cleavage ratios across a proportion of your samples running generate_all_himalayas_peaks_presence.pl
+
+     - Generate a list of files to process. For example:
+        
+        ls *eve.txt > my_list_of_everest_files.txt
+
+     - Calculate in which proportion of the files each peak is present (e.g. if a peak is present in 2 out 4 files it will have a proportion of 0.5)
+
+        perl generate_all_himalayas_peaks_presence.pl  my_list_of_everest_files.txt
+
+8 - Finally you can generate a matrix of cleavage ratios per sample to use as input for, for example, quantitative loci analysis with PLINK (https://zzz.bwh.harvard.edu/plink/). Youy need as input:
+    - Filename of the peaks presence positions table (required)
+    - Filename with a list of ratio files you want to use as input (required)
+    - Threshold for the proportion you want to use as threshold (optional, default is 0.5)
+    - Filename for the ouput file (optional, default is peaks_presence_matrix.05.txt)
+    - Read coverage (optional, default is 20)
+
+    perl generate_all_himalayas_peaks_matrix.pl peaks_presence_full_table.txt ratio_filenames_list.txt 0.5 peaks_presence_matrix.05.txt 20
+
+

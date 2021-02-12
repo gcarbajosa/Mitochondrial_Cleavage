@@ -9,9 +9,9 @@ use List::Util qw( max min );
 use Getopt::Long qw(GetOptions);
 
 # This are the defaults to test but you can call it with other options
-my $ratiosFile = "test_ratiosFile.txt";
-my $everestOutfile = 'test_everest.txt';
-my $himalayaOutfile = 'test_himalaya.txt';
+my $ratiosFile = "test_ratiosFile.rat.txt";
+my $everestOutfile = 'test_everest.eve.txt';
+my $himalayaOutfile = 'test_himalaya.him.txt';
 my $peakThres = 0.1;
 my $gapAllowed = 5;
 my $covThres = 20;
