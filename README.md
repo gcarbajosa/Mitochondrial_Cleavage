@@ -1,6 +1,6 @@
 # Mitochondrial RNA Cleavage
 
-The scripts in this repository together with other freely available bionformatics tools listed in the workflow below will let you calculate mitochondrial RNA cleavage ratios from any set of RNA-Seq fastq files. It is possible to adapat the pipeline to run with single end reads but the following workflow applies to paired end read data
+The scripts in this repository together with other freely available bionformatics tools listed in the workflow below will let you calculate mitochondrial RNA cleavage ratios from any set of RNA-Seq fastq files. It is possible to adapt the pipeline to run with single end reads but the following workflow applies to paired end read data only.
 
 These are the steps needed to go from fastq files to cleavage ratios:
 
@@ -25,6 +25,10 @@ These are the steps needed to go from fastq files to cleavage ratios:
     - A prefix to be used by the script to generate the output
 
     perl get_linear_cleavage_ratio.pl outFileNamePrefix.MT.bam my_out_cleavage >my_out_cleavage.log 2>my_out_cleavage.err
+
+
+Once the ratios have been generated it is possible to determine the presence of significantly high ratios across samples choosing clevage ratio threshold. It is also possible to generate a matrix with the chosen thershold to use as input for quantitive trait loci analysis (for example with PLINK). These are the steps required: 
+
 
 6 - Filter peaks running get_himalaya_ratios.pl. The script uses a cleavage ratio threshold (we recommend 0.1) and keeps the highest ratio above the threshold. When there is a cluster of peaks (Himalaya) within a bp range (we recommend 5bp) the script selects the peak with the highest ratio (everest) to represent the cluster. It can be run using a command like: 
 
