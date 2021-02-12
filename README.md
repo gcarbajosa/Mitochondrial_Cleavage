@@ -1,1 +1,23 @@
 # Mitochondrial RNA Cleavage
+
+The scripts in this repository together with other freely available bionformatics tools listed in the workflow below will let you calculate mitochondrial RNA cleavage ratios from any set of RNA-Seq fastq files. It is possible to adapat the pipeline to run with single end reads but the following workflow applies to paired end read data
+
+These are the steps needed to go from fastq files to cleavage ratios:
+
+1 - Trim sequence adapters from the fastq files with Trimgalore. We recommend using stringency 3. We recommend keeping quality as 0 because we are interested in the detection the position where the RNA fragments end and not the base calling. The command would be something like the following:
+
+    ./trim_galore --quality 0 --stringency 3 --output_dir 3 --paired fq_file1 fq_file2
+ 
+2- Trim PolyA reads using prinseq. We recommend trimming 5 bases. This step uses as input the fastq files obtained on the previous step.This would be an example command: 
+
+    perl prinseq-lite.pl -fastq fq_file1_from_trimgalore -fastq2 fq_file2_from_trimgalore -out_good fq_out_filename -min_len 20 -trim_tail_left 5 -trim_tail_right 5
+
+3- Map the trimmed reads from the previous steps with STAR using the EndToEnd option to avoid soft-clipping and therefore detect more accurately the positions of the original RNA fragment ends. Please note tha STAR requires a large amount of RAM memory (up to 32G) so this step would have to be run in a suitably powered computer. The --outSAMunmapped Within option can be specificed to keep unmapped reads for QC purposes. The --limitBAMsortRAM 100000000000 option is also recommended to avoid computer crashes due to RAM overload. We recommend reading the STAR manual if in doubt about these or other options (see https://github.com/alexdobin/STAR) An example command would be:
+
+    ./STAR --runThreadN 18 --alignEndsType EndToEnd --outSAMtype BAM SortedByCoordinate --genomeDir Path_2_STAR_genome_dir --readFilesIn $readFilesInPath/fq_file1_from_trimgalore_and_prinseq fq_file2_from_trimgalore_and_prinseq --outFileNamePrefix outFileNamePrefix 
+
+4 - Keep only mitochondrial reads (specify MT or chrM depending on the genome reference used) reads in bam file using samtools (http://samtools.sourceforge.net/):
+     samtools index outFileNamePrefix.bam 
+     samtools view -hb  outFileNamePrefix.bam chrM > outFileNamePrefix.MT.bam
+
+5 - Generate cleavage ratios running our perl script.
