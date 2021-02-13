@@ -56,3 +56,6 @@ Once the ratios have been generated it is possible to determine the presence of 
     perl generate_all_himalayas_peaks_matrix.pl peaks_presence_full_table.txt ratio_filenames_list.txt 0.5 peaks_presence_matrix.05.txt 20
 
 
+Here is worflow that illustrates the process:
+
+![alt text](https://github.com/gcarbajosa/Mitochondrial_RNA_Cleavage/blob/main/CleavageRatiosWorkflow.png?raw=true)
