@@ -18,6 +18,7 @@ These are the steps needed to go from fastq files to cleavage ratios:
     ./STAR --runThreadN 18 --alignEndsType EndToEnd --outSAMtype BAM SortedByCoordinate --genomeDir Path_2_STAR_genome_dir --readFilesIn $readFilesInPath/fq_file1_from_trimgalore_and_prinseq fq_file2_from_trimgalore_and_prinseq --outFileNamePrefix outFileNamePrefix 
 
 4 - Keep only mitochondrial reads (specify MT or chrM depending on the genome reference used) reads in bam file using samtools (http://samtools.sourceforge.net/):
+
      samtools index outFileNamePrefix.bam 
      samtools view -hb  outFileNamePrefix.bam chrM > outFileNamePrefix.MT.bam
 
